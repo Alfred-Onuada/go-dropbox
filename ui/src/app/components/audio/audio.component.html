@@ -1,0 +1,13 @@
+<div class="w-full h-full items-center flex flex-col">
+  <div class="border-[2px] border-black h-[150px] w-[130px] relative">
+    <div class="h-[35px] w-[35px] top-[-2px] left-[-2px] top-cut absolute"></div>
+    <div class="w-full h-full justify-center items-center flex flex-col">
+      <span class="material-symbols-outlined mb-3">music_note</span>
+      <h4>{{ file.extension }}</h4>
+      <h4>{{ file.size | fileSize }}</h4>
+    </div>
+  </div>
+  <div class="w-[130px] overflow-hidden whitespace-nowrap" appMarquee>
+    <h4 class="filename px-1">{{ file.name }}.{{ file.extension }}</h4>
+  </div>
+</div>

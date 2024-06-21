@@ -1,0 +1,32 @@
+<div class="min-h-[100vh] w-[100vw] relative">
+  <div class="flex justify-between items-center py-5 px-10 fixed w-[100vw] z-20 top-bg">
+    <input type="search" class="w-[100%] border-solid border-[1px] border-black rounded-full h-[40px] px-5"
+      placeholder="Search for a file" />
+    <div class="flex items-center">
+      <span class="material-symbols-outlined text-[40px] mx-[30px] cursor-pointer">note_add</span>
+      <span class="material-symbols-outlined text-[40px] cursor-pointer">create_new_folder</span>
+    </div>
+  </div>
+
+  <div class="px-10 py-[100px]">
+    <div class="grid grid-cols-6 gap-y-8">
+      @for (file of files(); track file.name) {
+        <!-- TODO: handle folders as well -->
+        @if (file.type.startsWith('audio')) {
+          <app-audio [file]="file"></app-audio>
+        } @else if (file.type.startsWith('video')) {
+          <app-video [file]="file"></app-video>
+        } @else if (file.type.startsWith('image')) {
+          <app-image [file]="file"></app-image>
+        } @else {
+          <app-file [file]="file"></app-file>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center py-5 px-10 fixed bottom-0 left-0 w-[100vw] z-20 bottom-bg">
+    <h4 class="font-semibold">{{currdir()}}</h4>
+    <span class="material-symbols-outlined text-[40px] cursor-pointer">upload_file</span>
+  </div>
+</div>

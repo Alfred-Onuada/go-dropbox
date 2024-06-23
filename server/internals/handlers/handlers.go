@@ -107,55 +107,55 @@ func AddFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateFile(w http.ResponseWriter, r *http.Request) {
-  filename  := r.URL.Query().Get("q")//this gets the filename from the query string should update to body
-  
-   body, err := io.ReadAll(r.Body)
-  if err != nil {
-	http.Error(w, "There was a problem with your request", http.StatusBadRequest)
-	return
-	  }
+	filename := r.URL.Query().Get("q") //this gets the filename from the query string should update to body
 
-	  ///error handling in go too useless 
-	  /* 
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "There was a problem with your request", http.StatusBadRequest)
+		return
+	}
+
+	///error handling in go too useless
+	/*
 	  so this is the part where we are supposed to update the file, but we are not updating the file, we are just creating a new file, so what is the point of this function?
-	  */
+	*/
 
-	  /// address pointing doesn't make sense sha , while can't i just send you the file why must i use & to get addres then * to get the value go too useless 
-	    var file types.File
-	  	index,err := getFileIndex(filename) //this is supposed to be getFile(filename) but i am using getFileIndex because i am returning the index of the file
-		
-	  if err != nil {
+	/// address pointing doesn't make sense sha , while can't i just send you the file why must i use & to get addres then * to get the value go too useless
+	var file types.File
+	index, err := getFileIndex(filename) //this is supposed to be getFile(filename) but i am using getFileIndex because i am returning the index of the file
+
+	if err != nil {
 		http.Error(w, "The File You are requesting for was not found", http.StatusNotFound)
-	  }		
-		err = json.Unmarshal(body, &file)   //this is supposed to be json.NewDecoder(r.Body).Decode(&file) but i am using Unmarshal because i am reading the body as a byte slice
-	  if err != nil {
+	}
+	err = json.Unmarshal(body, &file) //this is supposed to be json.NewDecoder(r.Body).Decode(&file) but i am using Unmarshal because i am reading the body as a byte slice
+	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, "There was a problem with your request", http.StatusBadRequest)
 		return
-	  }
-	   fileexists := FileExists(file.Name)
-	  if fileexists {
+	}
+	fileexists := FileExists(file.Name)
+	if fileexists {
 		http.Error(w, "Duplicate file names not allowed", http.StatusBadRequest)
 		return
-	  }
-	   files[index] = file
-	   jsonresp, err := json.Marshal(files[index])
-	  if err != nil {
+	}
+	files[index] = file
+	jsonresp, err := json.Marshal(files[index])
+	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 		return
-	  }
-	  w.Header().Set("content-type", "application/json")
-	  w.Write(jsonresp)
-	  w.WriteHeader(http.StatusOK)
 	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(jsonresp)
+	w.WriteHeader(http.StatusOK)
+}
 
 func DeleteFile(w http.ResponseWriter, r *http.Request) {
-	filename  := r.URL.Query().Get("q")
-	index,err := getFileIndex(filename)
+	filename := r.URL.Query().Get("q")
+	index, err := getFileIndex(filename)
 	if err != nil {
 		http.Error(w, "The File You are requesting for was not found", http.StatusNotFound)
-	  }		
+	}
 	files = append(files[:index], files[index+1:]...)
 	jsonresp := []byte(`{"status":true,"message":"File Deleted Successfully"}`) // i dey use status if you no like am drink hypo 😂
 	w.Header().Set("content-type", "application/json")
@@ -163,33 +163,21 @@ func DeleteFile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func getFile(filename string) (types.File,int,error) {
-	//helper function to get a file to avoid repitition
-
-	for i, file := range files {
-	  if file.Name == filename {
-		return file,i,nil
-	  }
-	}
-	return types.File{},0,errors.New("File not found")
-  }
-
-  func FileExists(filename string) bool {
+func FileExists(filename string) bool {
 	//helper function to check if a file exists
 	for _, file := range files {
-	  if file.Name == filename {
-		return true
-	  }
+		if file.Name == filename {
+			return true
+		}
 	}
 	return false
-	  }
-  func getFileIndex(filename string) (int,error) {
+}
+func getFileIndex(filename string) (int, error) {
 	//helper function to get the index of the file
 	for i, file := range files {
-	  if file.Name == filename {
-		return i,nil
-	  }
+		if file.Name == filename {
+			return i, nil
+		}
 	}
-	return 0,errors.New("File not found")
-	  }
-
+	return 0, errors.New("File not found")
+}

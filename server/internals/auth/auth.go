@@ -29,7 +29,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if user.Username == username && user.Password == password {		//when db add password hashing and verification
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(interface{}(user.Item).([]byte)))
+		
+		jsonresp := map[string]interface{}{
+			"status":  true,
+			"message": "File Deleted Successfully",
+			"item": user.Item,
+			"tokentype" : "Bearer",
+			"token": user.Username,//change to jwt token
+		}
+		resp,err := json.Marshal(jsonresp)
+		
+		if err != nil {
+			http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
+			return
+		}
+		w.Write(resp)
 		return
 		}
 		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
@@ -60,11 +74,18 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userDir := curDir + "/" + username
-    err = os.Mkdir(userDir, 0755) 
-    if err != nil {
-        http.Error(w, "Failed to create user directory", http.StatusInternalServerError)
-        return
-    }
+    exists, err := IsDirExists(userDir)
+	if err != nil {
+		http.Error(w, "Error checking user directory", http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		err = os.Mkdir(userDir, 0755)
+		if err != nil {
+			http.Error(w, "Failed to create user directory", http.StatusInternalServerError)
+			return
+		}
+	}
 	 user := types.User{ 
 		Username: username,
 		Password: password,
@@ -84,3 +105,17 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	
 }
 
+
+func IsDirExists(path string) (bool, error) {
+    info, err := os.Stat(path)
+    if err != nil {
+        if os.IsNotExist(err) {
+            // The directory does not exist
+            return false, nil
+        }
+        // Some other error occurred, like a permission issue
+        return false, err
+    }
+    // Return true if the path is a directory
+    return info.IsDir(), nil
+}

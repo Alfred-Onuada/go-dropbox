@@ -1,6 +1,6 @@
 <div class="min-h-[100vh] w-[100vw] relative">
   <div class="flex justify-between items-center py-5 px-10 fixed w-[100vw] z-20 top-bg">
-    <input type="search" class="w-[100%] border-solid border-[1px] border-black rounded-full h-[40px] px-5"
+    <input mimetype="search" class="w-[100%] border-solid border-[1px] border-black rounded-full h-[40px] px-5"
       placeholder="Search for a file" />
     <div class="flex items-center">
       <span class="material-symbols-outlined text-[40px] mx-[30px] cursor-pointer">note_add</span>
@@ -12,11 +12,11 @@
     <div class="grid grid-cols-6 gap-y-8">
       @for (file of files(); track file.name) {
         <!-- TODO: handle folders as well -->
-        @if (file.type.startsWith('audio')) {
+        @if (file.mimetype.startsWith('audio')) {
           <app-audio [file]="file"></app-audio>
-        } @else if (file.type.startsWith('video')) {
+        } @else if (file.mimetype.startsWith('video')) {
           <app-video [file]="file"></app-video>
-        } @else if (file.type.startsWith('image')) {
+        } @else if (file.mimetype.startsWith('image')) {
           <app-image [file]="file"></app-image>
         } @else {
           <app-file [file]="file"></app-file>

@@ -18,421 +18,421 @@ export class HomeComponent {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     },
     {
       name: "Beethoven_Symphony_No5",
       size: 5000000,
       extension: "mp3",
-      type: "audio/mpeg"
+      mimetype: "audio/mpeg"
     },
     {
       name: "Nature_Documentary",
       size: 20000000,
       extension: "mp4",
-      type: "video/mp4"
+      mimetype: "video/mp4"
     },
     {
       name: "Sunset_in_Hawaii",
       size: 3000000,
       extension: "jpg",
-      type: "image/jpeg"
+      mimetype: "image/jpeg"
     },
     {
       name: "Project_Report",
       size: 150000,
       extension: "pdf",
-      type: "application/pdf"
+      mimetype: "application/pdf"
     },
     {
       name: "Jazz_Classics",
       size: 4500000,
       extension: "wav",
-      type: "audio/wav"
+      mimetype: "audio/wav"
     },
     {
       name: "Holiday_Trip",
       size: 25000000,
       extension: "mkv",
-      type: "video/x-matroska"
+      mimetype: "video/x-matroska"
     },
     {
       name: "Family_Reunion",
       size: 4000000,
       extension: "png",
-      type: "image/png"
+      mimetype: "image/png"
     },
     {
       name: "Thesis_Document",
       size: 100000,
       extension: "docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      mimetype: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     },
     {
       name: "Classical_Piano_Collection",
       size: 5200000,
       extension: "flac",
-      type: "audio/flac"
+      mimetype: "audio/flac"
     },
     {
       name: "Wildlife_Adventure",
       size: 18000000,
       extension: "avi",
-      type: "video/x-msvideo"
+      mimetype: "video/x-msvideo"
     }
   ]);
 

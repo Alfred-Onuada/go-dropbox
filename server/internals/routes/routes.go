@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/Alfred-Onuada/go-dropbox/internals/auth"
 	"github.com/Alfred-Onuada/go-dropbox/internals/handlers"
 )
 
@@ -16,4 +17,8 @@ func RegisterRoutes(mux *http.ServeMux) {
 
 	// TODO:
 	mux.HandleFunc("DELETE /files/{fileName}", handlers.DeleteFile)
+
+	mux.HandleFunc("POST /auth/login", auth.LoginHandler)
+
+	mux.HandleFunc("POST /auth/register", auth.RegisterHandler)
 }

@@ -16,4 +16,12 @@ type Item struct {
 	Name string `json:"name"`
 	Path string `json:"path"` //aws s3 path
 	ItemType  ItemType `json:"itemType"`
+	Items []*Item `json:"items,omitempty"`
+}
+
+type User struct { 
+
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Item *Item `json:"item,omitempty"`
 }

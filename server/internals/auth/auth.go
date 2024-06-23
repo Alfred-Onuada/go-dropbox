@@ -73,19 +73,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There was a problem getting the current directory", http.StatusInternalServerError)
 		return
 	}
-	userDir := curDir + "/" + username
-    exists, err := IsDirExists(userDir)
-	if err != nil {
-		http.Error(w, "Error checking user directory", http.StatusInternalServerError)
-		return
-	}
-	if !exists {
-		err = os.Mkdir(userDir, 0755)
-		if err != nil {
-			http.Error(w, "Failed to create user directory", http.StatusInternalServerError)
-			return
-		}
-	}
+	 userDir := curDir + "/users/" + username
 	 user := types.User{ 
 		Username: username,
 		Password: password,

@@ -133,6 +133,11 @@ func UpdateFile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There was a problem with your request", http.StatusBadRequest)
 		return
 	  }
+	   fileexists := FileExists(file.Name)
+	  if fileexists {
+		http.Error(w, "Duplicate file names not allowed", http.StatusBadRequest)
+		return
+	  }
 	   files[index] = file
 	   jsonresp, err := json.Marshal(files[index])
 	  if err != nil {
@@ -169,6 +174,15 @@ func getFile(filename string) (types.File,int,error) {
 	return types.File{},0,errors.New("File not found")
   }
 
+  func FileExists(filename string) bool {
+	//helper function to check if a file exists
+	for _, file := range files {
+	  if file.Name == filename {
+		return true
+	  }
+	}
+	return false
+	  }
   func getFileIndex(filename string) (int,error) {
 	//helper function to get the index of the file
 	for i, file := range files {

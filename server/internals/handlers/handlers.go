@@ -7,8 +7,10 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/Alfred-Onuada/go-dropbox/internals/types"
+	// "github.com/gorilla/mux"
 )
 
 var files []types.File
@@ -107,60 +109,125 @@ func AddFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateFile(w http.ResponseWriter, r *http.Request) {
-  filename  := r.URL.Query().Get("q")//this gets the filename from the query string should update to body
-  
-   body, err := io.ReadAll(r.Body)
-  if err != nil {
-	http.Error(w, "There was a problem with your request", http.StatusBadRequest)
-	return
-	  }
+	// Check that the request method is PATCH
+	if r.Method != http.MethodPatch {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
 
-	  ///error handling in go too useless 
-	  /* 
-	  so this is the part where we are supposed to update the file, but we are not updating the file, we are just creating a new file, so what is the point of this function?
-	  */
+	// Extract the filename from the URL path
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
 
-	  /// address pointing doesn't make sense sha , while can't i just send you the file why must i use & to get addres then * to get the value go too useless 
-	    var file types.File
-	  	index,err := getFileIndex(filename) //this is supposed to be getFile(filename) but i am using getFileIndex because i am returning the index of the file
-		
-	  if err != nil {
-		http.Error(w, "The File You are requesting for was not found", http.StatusNotFound)
-	  }		
-		err = json.Unmarshal(body, &file)   //this is supposed to be json.NewDecoder(r.Body).Decode(&file) but i am using Unmarshal because i am reading the body as a byte slice
-	  if err != nil {
+	// Check if we have the correct number of parts
+	if len(parts) < 3 || parts[2] == "" {
+		http.Error(w, "Filename not specified", http.StatusBadRequest)
+		return
+	}
+
+	filename := parts[2]
+
+	// Read the request body
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "There was a problem with your request", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	///error handling in go too useless
+	/* 
+	so this is the part where we are supposed to update the file, but we are not updating the file, we are just creating a new file, so what is the point of this function?
+	*/
+
+	// Unmarshal the JSON into a File struct
+	var file types.File
+	err = json.Unmarshal(body, &file)
+	//this is supposed to be json.NewDecoder(r.Body).Decode(&file) but I am using Unmarshal because I am reading the body as a byte slice
+	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, "There was a problem with your request", http.StatusBadRequest)
 		return
-	  }
-	   fileexists := FileExists(file.Name)
-	  if fileexists {
-		http.Error(w, "Duplicate file names not allowed", http.StatusBadRequest)
+	}
+
+	// Get the index of the file to update
+	index, err := getFileIndex(filename) //this is supposed to be getFile(filename) but I am using getFileIndex because I am returning the index of the file
+	if err != nil {
+		http.Error(w, "The File You are requesting for was not found", http.StatusNotFound)
 		return
-	  }
-	   files[index] = file
-	   jsonresp, err := json.Marshal(files[index])
-	  if err != nil {
+	}
+
+	// Update the file fields
+	if file.Name != "" {
+		if FileExists(file.Name) && file.Name != files[index].Name {
+			http.Error(w, "Duplicate file names not allowed", http.StatusBadRequest)
+			return
+		}
+		files[index].Name = file.Name
+	}
+	if file.Size != 0 {
+		files[index].Size = file.Size
+	}
+	if file.Extension != "" {
+		files[index].Extension = file.Extension
+	}
+	if file.Mimetype != "" {
+		files[index].Mimetype = file.Mimetype
+	}
+
+	// Marshal the updated file to JSON
+	jsonResp, err := json.Marshal(files[index])
+	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 		return
-	  }
-	  w.Header().Set("content-type", "application/json")
-	  w.Write(jsonresp)
-	  w.WriteHeader(http.StatusOK)
 	}
 
+	// Send the response
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResp)
+}
+
 func DeleteFile(w http.ResponseWriter, r *http.Request) {
-	filename  := r.URL.Query().Get("q")
-	index,err := getFileIndex(filename)
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
+
+	// Check if we have the correct number of parts
+	if len(parts) < 3 || parts[2] == "" {
+		http.Error(w, "Filename not specified", http.StatusBadRequest)
+		return
+	}
+
+	filename := parts[2]
+
+	// Get the index of the file to delete
+	index, err := getFileIndex(filename)
 	if err != nil {
 		http.Error(w, "The File You are requesting for was not found", http.StatusNotFound)
-	  }		
+		return
+	}
+
+	// Delete the file from the slice
 	files = append(files[:index], files[index+1:]...)
-	jsonresp := []byte(`{"status":true,"message":"File Deleted Successfully"}`) // i dey use status if you no like am drink hypo 😂
-	w.Header().Set("content-type", "application/json")
-	w.Write(jsonresp)
+
+	// Prepare the response
+	jsonResp := map[string]interface{}{
+		"status":  true,
+		"message": "File Deleted Successfully",
+	}
+
+	// Marshal the response to JSON
+	response, err := json.Marshal(jsonResp)
+	if err != nil {
+		http.Error(w, "There was a problem processing the JSON response", http.StatusInternalServerError)
+		return
+	}
+
+	// Send the response
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
 func getFile(filename string) (types.File,int,error) {
@@ -190,6 +257,6 @@ func getFile(filename string) (types.File,int,error) {
 		return i,nil
 	  }
 	}
-	return 0,errors.New("File not found")
+	return -1,fmt.Errorf("File not found")
 	  }
 

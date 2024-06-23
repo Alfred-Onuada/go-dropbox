@@ -7,3 +7,13 @@ type File struct {
 	Extension string `json:"extension"`
 	Mimetype  string `json:"mimetype"`
 }
+type ItemType int
+const(
+	Folder ItemType = iota
+	Files
+)
+type Item struct {
+	Name string `json:"name"`
+	Path string `json:"path"` //aws s3 path
+	ItemType  ItemType `json:"itemType"`
+}

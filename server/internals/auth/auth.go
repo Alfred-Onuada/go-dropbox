@@ -2,16 +2,36 @@ package auth
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/Alfred-Onuada/go-dropbox/internals/types"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
+
+var DB *gorm.DB
+
+func Init() {
+	dsn := os.Getenv("POSTGRES_DSN")
+	if dsn == "" {
+		log.Fatal("POSTGRES_DSN environment variable not set")
+	}
+
+	var err error
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("failed to connect to database: ", err)
+	}
+}
 
 // LoginHandler is a handler for the login route
 var users []types.User
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// get the request body
+
 	decoder := json.NewDecoder(r.Body)
 	var data map[string]string
 	err := decoder.Decode(&data)
@@ -19,7 +39,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 		return
 	}
-
+   
 	// get the username and password
 	username := data["username"]
 	password := data["password"]
@@ -62,21 +82,30 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 		return
 	}
-
+	Init()
 	// get the username and password
 	username := data["username"]
 	password := data["password"]
-
-	// check if the username and password are correct
-	 curDir,err := os.Getwd()
+	 var existinguser types.User
+	if err := DB.Where("username = ?" , username).First(&existinguser).Error; err==nil {
+		http.Error(w,"Username Is Taken",http.StatusBadRequest)
+		return
+	}
+	 
+	 curDir,err := os.Getwd() // change later to s3 
 	 if err != nil {
 		http.Error(w, "There was a problem getting the current directory", http.StatusInternalServerError)
 		return
 	}
 	 userDir := curDir + "/users/" + username
+	 hashpassword,err := hashPassword(password)
+	 if err != nil {
+		http.Error(w,"A problem Occured while processing your request",http.StatusInternalServerError)
+		return
+	 }
 	 user := types.User{ 
 		Username: username,
-		Password: password,
+		Password: hashpassword,
 		Item: nil,// change to either db or s3path
 	 } 
 	 item := types.Item{
@@ -86,7 +115,10 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		Items: nil,
 	 }
 	 user.Item = &item
-	  users = append(users, user)
+	 if err := DB.Create(&user).Error; err != nil {
+		 http.Error(w,"A problem Occured while processing your request",http.StatusInternalServerError)
+		 return
+	}
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message": "Registration successful"}`))
@@ -106,4 +138,17 @@ func IsDirExists(path string) (bool, error) {
     }
     // Return true if the path is a directory
     return info.IsDir(), nil
+}
+
+
+func hashPassword(password string) (string, error) {
+	// helper function to hash passwords
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+func checkPasswordHash(password, hash string) bool {
+	// helper function to check passwords hash
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

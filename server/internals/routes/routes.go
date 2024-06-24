@@ -5,6 +5,7 @@ import (
 
 	"github.com/Alfred-Onuada/go-dropbox/internals/auth"
 	"github.com/Alfred-Onuada/go-dropbox/internals/handlers"
+	"github.com/Alfred-Onuada/go-dropbox/internals/middleware"
 )
 
 func RegisterRoutes(mux *http.ServeMux) {
@@ -21,4 +22,6 @@ func RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /auth/login", auth.LoginHandler)
 
 	mux.HandleFunc("POST /auth/register", auth.RegisterHandler)
+
+	mux.Handle("GET /auth/ping" , middleware.JWTMiddleware(http.HandlerFunc(auth.TestAuth)))
 }

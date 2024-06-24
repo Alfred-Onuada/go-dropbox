@@ -32,6 +32,12 @@ func Init() {
 	}
 }
 
+func TestAuth(w http.ResponseWriter, r *http.Request){
+	username := r.Context().Value("username").(string)
+
+	w.Write([]byte(username))
+	return
+}
 // LoginHandler is a handler for the login route
 var users []types.User
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -45,22 +51,31 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
    
-	// get the username and password
 	username := data["username"]
 	password := data["password"]
       
-	// check if the username and password are correct
-	 for _, user := range users {
-		if user.Username == username && user.Password == password {		//when db add password hashing and verification
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		
+	var user types.User
+	if err := DB.Where("username = ?", username).First(&user); err == nil {
+		http.Error(w,"Invalid Credentials",http.StatusUnauthorized)
+		return
+	}
+	validpassword := checkPasswordHash(password,user.Password)
+	
+	if !validpassword  {
+		http.Error(w,"Invalid Credentials",http.StatusUnauthorized)
+		return	
+	} 
+	 token,err := GenerateJWT(user.Username)
+	 if err !=nil {
+		http.Error(w, "Something Went Wrong , ask your ex",http.StatusInternalServerError)
+		return
+	 }
 		jsonresp := map[string]interface{}{
 			"status":  true,
-			"message": "File Deleted Successfully",
+			"message": "Login Successfully",
 			"item": user.Item,
 			"tokentype" : "Bearer",
-			"token": user.Username,//change to jwt token
+			"token": token,
 		}
 		resp,err := json.Marshal(jsonresp)
 		
@@ -68,14 +83,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 			return
 		}
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		w.Write(resp)
 		return
-		}
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
-		return
+		
 	}
 	
-}
+
 
 // RegisterHandler is a handler for the register route
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +102,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
 		return
 	}
-	Init()
+	
 	// get the username and password
 	username := data["username"]
 	password := data["password"]

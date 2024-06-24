@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,20 +20,29 @@ const(
 	Files
 )
 type Item struct {
-	Name string `json:"name"`
-	Path string `json:"path"` //aws s3 path
-	ItemType  ItemType `json:"itemType"`
-	Items []*Item `json:"items,omitempty"`
+	gorm.Model
+	Name     string   `json:"name"`
+	Path     string   `json:"path"` // AWS S3 path
+	ItemType ItemType `json:"itemType"`
+	ParentID *uint    `json:"-"` // Use ParentID to reference the parent Item
+	Parent   *Item    `json:"-"` // Self-referencing foreign key
+	Items    []*Item  `json:"items,omitempty" gorm:"foreignKey:ParentID"`
 }
 
-type User struct { 
-
+type User struct {
+	gorm.Model
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Item *Item `json:"item,omitempty"`
+	ItemID   *uint  `json:"-"` // Use ItemID to reference the root Item
+	Item     *Item  `json:"item,omitempty" gorm:"foreignKey:ItemID"`
 }
 
+
 func HandleMigration() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	dsn := os.Getenv("POSTGRES_DSN")
 	if dsn == "" {
 		log.Fatal("POSTGRES_DSN environment variable not set")

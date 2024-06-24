@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/Alfred-Onuada/go-dropbox/internals/types"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,12 +16,16 @@ import (
 var DB *gorm.DB
 
 func Init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	dsn := os.Getenv("POSTGRES_DSN")
 	if dsn == "" {
 		log.Fatal("POSTGRES_DSN environment variable not set")
 	}
 
-	var err error
+	
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect to database: ", err)

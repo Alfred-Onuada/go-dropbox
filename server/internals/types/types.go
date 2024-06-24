@@ -1,5 +1,7 @@
 package types
 
+import "gorm.io/gorm"
+
 // capital letter means the field is accesible from outside this package
 type File struct {
 	Name      string `json:"name"`
@@ -13,15 +15,19 @@ const(
 	Files
 )
 type Item struct {
-	Name string `json:"name"`
-	Path string `json:"path"` //aws s3 path
-	ItemType  ItemType `json:"itemType"`
-	Items []*Item `json:"items,omitempty"`
+	gorm.Model
+	Name     string   `json:"name"`
+	Path     string   `json:"path"` // AWS S3 path
+	ItemType ItemType `json:"itemType"`
+	ParentID *uint    `json:"-"` // Use ParentID to reference the parent Item
+	Parent   *Item    `json:"-"` // Self-referencing foreign key
+	Items    []*Item  `json:"items,omitempty" gorm:"foreignKey:ParentID"`
 }
 
-type User struct { 
-
+type User struct {
+	gorm.Model
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Item *Item `json:"item,omitempty"`
+	ItemID   *uint  `json:"-"` // Use ItemID to reference the root Item
+	Item     *Item  `json:"item,omitempty" gorm:"foreignKey:ItemID"`
 }

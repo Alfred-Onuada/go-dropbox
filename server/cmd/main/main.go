@@ -17,11 +17,11 @@ func main() {
 	port := 4001
 	url := fmt.Sprintf("%v:%v", address, port)
 	fmt.Printf("Go server running @ %v \n", url)
-
+	db.HandleMigration()
 	err := http.ListenAndServe(url, mux)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	db.HandleMigration()
+	
 
 }

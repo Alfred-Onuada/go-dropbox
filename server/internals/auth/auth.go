@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Alfred-Onuada/go-dropbox/internals/helpers"
 	"github.com/Alfred-Onuada/go-dropbox/internals/types"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
@@ -47,8 +48,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var data map[string]string
 	err := decoder.Decode(&data)
 	if err != nil {
-		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
-		return
+		helpers.JSONResponse(w,false,"An Error Occured",http.StatusInternalServerError,nil)
 	}
    
 	username := data["username"]
@@ -56,37 +56,25 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
       
 	var user types.User
 	if err := DB.Where("username = ?", username).First(&user); err == nil {
-		http.Error(w,"Invalid Credentials",http.StatusUnauthorized)
-		return
+		helpers.JSONResponse(w,false,"Invalid Credentials",http.StatusUnauthorized,nil)
+
 	}
 	validpassword := checkPasswordHash(password,user.Password)
 	
 	if !validpassword  {
-		http.Error(w,"Invalid Credentials",http.StatusUnauthorized)
-		return	
+		helpers.JSONResponse(w,false,"Invalid Credentials",http.StatusUnauthorized,nil)
+
 	} 
 	 token,err := GenerateJWT(user.Username)
 	 if err !=nil {
-		http.Error(w, "Something Went Wrong , ask your ex",http.StatusInternalServerError)
-		return
+		helpers.JSONResponse(w,false ,"Something Went Wrong , ask your ex",http.StatusInternalServerError,nil)
 	 }
 		jsonresp := map[string]interface{}{
-			"status":  true,
-			"message": "Login Successfully",
 			"item": user.Item,
 			"tokentype" : "Bearer",
 			"token": token,
 		}
-		resp,err := json.Marshal(jsonresp)
-		
-		if err != nil {
-			http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(resp)
-		return
+		helpers.JSONResponse(w,true,"Login Successfull",http.StatusOK,jsonresp)
 		
 	}
 	
@@ -99,8 +87,8 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var data map[string]string
 	err := decoder.Decode(&data)
 	if err != nil {
-		http.Error(w, "There was a problem processing the JSON", http.StatusInternalServerError)
-		return
+		helpers.JSONResponse(w,false,"There was a problem processing the JSON",http.StatusInternalServerError,nil)
+
 	}
 	
 	// get the username and password
@@ -108,20 +96,20 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	password := data["password"]
 	 var existinguser types.User
 	if err := DB.Where("username = ?" , username).First(&existinguser).Error; err==nil {
-		http.Error(w,"Username Is Taken",http.StatusBadRequest)
-		return
+		helpers.JSONResponse(w,false,"Username Is Taken",http.StatusBadRequest,nil)
+
 	}
 	 
 	 curDir,err := os.Getwd() // change later to s3 
 	 if err != nil {
-		http.Error(w, "There was a problem getting the current directory", http.StatusInternalServerError)
-		return
+		helpers.JSONResponse(w,false,"Unable to get the directory",http.StatusInternalServerError,nil)
+
 	}
 	 userDir := curDir + "/users/" + username
 	 hashpassword,err := hashPassword(password)
 	 if err != nil {
-		http.Error(w,"A problem Occured while processing your request",http.StatusInternalServerError)
-		return
+		helpers.JSONResponse(w,false,"An Unknown error occured",http.StatusInternalServerError,nil)
+
 	 }
 	 user := types.User{ 
 		Username: username,
@@ -136,12 +124,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	 }
 	 user.Item = &item
 	 if err := DB.Create(&user).Error; err != nil {
-		 http.Error(w,"A problem Occured while processing your request",http.StatusInternalServerError)
-		 return
+		helpers.JSONResponse(w,false,"There was a problem processing your request",http.StatusInternalServerError,nil)
+
 	}
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message": "Registration successful"}`))
+	helpers.JSONResponse(w,true,"Login Successfull",http.StatusOK,nil)
+
 	
 }
 

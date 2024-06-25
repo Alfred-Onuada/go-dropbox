@@ -31,3 +31,9 @@ type User struct {
 	ItemID   *uint  `json:"-"` // Use ItemID to reference the root Item
 	Item     *Item  `json:"item,omitempty" gorm:"foreignKey:ItemID"`
 }
+
+type BaseResponse struct {
+	Status bool `json:"status"`
+	Message string `json:"message"`
+	Data  interface{} `json:"data,omitempty"`
+}

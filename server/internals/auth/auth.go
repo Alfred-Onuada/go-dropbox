@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -46,9 +47,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// get the request body
 
 	decoder := json.NewDecoder(r.Body)
-	var data map[string]string
+	var data map[string]interface{}
 	err := decoder.Decode(&data)
 	if err != nil {
+		fmt.Printf(err.Error())
 		helpers.JSONResponse(w,false,"An Error Occured",http.StatusInternalServerError,nil)
 		return
 	}
@@ -58,15 +60,17 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
     }
 	
     err = validator.Validate(
-		map[string]string{"username" : "required",
-		"password" : "required",
+		map[string]string{"username" : "required|string",
+		"password" : "required|string",
 		}, validatorinterface)
 		if err != nil {
 			helpers.JSONResponse(w,false,err.Error(),http.StatusUnprocessableEntity,nil)
 			return
 		}
-	username := data["username"]
-	password := data["password"]
+		username, _ := data["username"].(string)
+		
+		password, _ := data["password"].(string)
+		
       
 	var user types.User
 	if err := DB.Where("username = ?", username).First(&user); err == nil {
@@ -74,6 +78,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+	
 	validpassword := checkPasswordHash(password,user.Password)
 	
 	if !validpassword  {

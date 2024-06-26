@@ -8,6 +8,7 @@ import (
 
 	"github.com/Alfred-Onuada/go-dropbox/internals/helpers"
 	"github.com/Alfred-Onuada/go-dropbox/internals/types"
+	"github.com/Alfred-Onuada/go-dropbox/internals/validator"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
@@ -51,7 +52,19 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.JSONResponse(w,false,"An Error Occured",http.StatusInternalServerError,nil)
 		return
 	}
-   
+	 validatorinterface := make(map[string]interface{});
+	 for key, value := range data {
+        validatorinterface[key] = value
+    }
+	
+    err = validator.Validate(
+		map[string]string{"username" : "required",
+		"password" : "required",
+		}, validatorinterface)
+		if err != nil {
+			helpers.JSONResponse(w,false,err.Error(),http.StatusUnprocessableEntity,nil)
+			return
+		}
 	username := data["username"]
 	password := data["password"]
       

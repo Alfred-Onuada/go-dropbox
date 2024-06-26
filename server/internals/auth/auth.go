@@ -54,15 +54,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.JSONResponse(w,false,"An Error Occured",http.StatusInternalServerError,nil)
 		return
 	}
-	 validatorinterface := make(map[string]interface{});
-	 for key, value := range data {
-        validatorinterface[key] = value
-    }
+	 
 	
     err = validator.Validate(
 		map[string]string{"username" : "required|string",
 		"password" : "required|string",
-		}, validatorinterface)
+		}, data)
 		if err != nil {
 			helpers.JSONResponse(w,false,err.Error(),http.StatusUnprocessableEntity,nil)
 			return
